@@ -1,0 +1,36 @@
+TRANSLATIONS = {
+    "lang_name": {"uk": "Українська"},
+    "input_nums": {"uk": "Введіть три числа a, b, c: "},
+    "input_lang": {"uk": "Введіть мову інтерфейсу: "},
+    "header_lang": {"uk": "Мова: "},
+    "header_nums": {"uk": "Три числа a, b, c: "},
+    "task_desc": {
+        "uk": "Додатні возвести в квадрат, а від’ємні залишити без змін, порівняти модулі отриманих чисел."
+    }
+}
+
+def translate(key, lang):
+    lang = "uk" 
+    return TRANSLATIONS.get(key, {}).get(lang, "Помилка тексту")
+
+def process_numbers(a, b, c):
+    result = []
+    for num in (a, b, c):
+        if num > 0:
+            result.append(num ** 2)
+        else:
+            result.append(num)
+    return result
+
+def compare_moduli(nums):
+    sorted_nums = sorted(nums, key=abs)
+    result_str = ""
+    for i in range(len(sorted_nums)):
+        if i == 0:
+            result_str += f"|{sorted_nums[i]}|"
+        else:
+            if abs(sorted_nums[i]) == abs(sorted_nums[i-1]):
+                result_str += f" = |{sorted_nums[i]}|"
+            else:
+                result_str += f" < |{sorted_nums[i]}|"
+    return result_str
