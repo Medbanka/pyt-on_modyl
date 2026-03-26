@@ -1,0 +1,52 @@
+import json
+import os
+import sys
+from functions import translate, process_numbers, compare_moduli
+
+FILE_NAME = "MyData.json"
+
+def main():
+    data = None
+    
+    if os.path.exists(FILE_NAME):
+        try:
+            with open(FILE_NAME, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                if not all(k in data for k in ("a", "b", "c", "lang")):
+                    data = None
+        except (json.JSONDecodeError, ValueError):
+            data = None
+
+    if data is None:
+        try:
+            user_input = input("Введіть три числа a, b, c: ")
+            a, b, c = map(int, user_input.split())
+        except ValueError:
+            print("Помилка: потрібно ввести три числа через пробіл.")
+            sys.exit(1)
+            
+        lang = input("Введіть мову інтерфейсу: ").strip().lower()
+        lang = "uk"
+
+        new_data = {"a": a, "b": b, "c": c, "lang": lang}
+        with open(FILE_NAME, 'w', encoding='utf-8') as file:
+            json.dump(new_data, file)
+        
+        print(f"Дані збережено в файл {FILE_NAME}")
+        sys.exit(0)
+
+    lang = data.get("lang", "uk")
+    a, b, c = data["a"], data["b"], data["c"]
+
+    print(f"{translate('header_lang', lang)}{translate('lang_name', lang)}")
+    print(f"{translate('header_nums', lang)}{a} {b} {c}")
+    print(translate('task_desc', lang))
+
+    processed = process_numbers(a, b, c)
+    print(f"{processed[0]} {processed[1]} {processed[2]}")
+    
+    comparison_result = compare_moduli(processed)
+    print(comparison_result)
+
+if __name__ == "__main__":
+    main()
